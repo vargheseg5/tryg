@@ -2,3 +2,7 @@
     height: 4em;
     padding: 1em;
 }
+
+#journal-content {
+    height: 60%;
+}

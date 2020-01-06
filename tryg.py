@@ -1,7 +1,12 @@
-from flask import Flask, render_template, flash, redirect, render_template, request, url_for
+from datetime import datetime
+
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_bcrypt import Bcrypt, check_password_hash
-from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_login import (LoginManager, current_user, login_required,
+                         login_user, logout_user)
 from flask_sqlalchemy import SQLAlchemy
+
+from utils import str_to_date, get_uuid
 
 tryg = Flask(__name__)
 tryg.config["SECRET_KEY"] = b'U\x12"\xb7P\xc9\x9f\x9da3lZlb\xc7\x95\xe4W\xd2o\xf2\xbb\xdfg<\xd9\x0f\x87\x1en\xc0;'
@@ -54,14 +59,48 @@ def load_user(user_id):
     """
     return User.query.get(user_id)
 
+class Journal(tryg_db.Model):
+    jid = tryg_db.Column(tryg_db.String, primary_key=True)
+    title = tryg_db.Column(tryg_db.String, nullable=False)
+    content = tryg_db.Column(tryg_db.String, nullable=False)
+    journal_date = tryg_db.Column(tryg_db.Date, default=datetime.utcnow)
+    date_created = tryg_db.Column(tryg_db.DateTime, default=datetime.utcnow)
+    author = tryg_db.Column(tryg_db.String, nullable=False)
+
+    def __repr__(self):
+        return "<Journal #%r>" % self.jid
+
 @tryg.route('/')
 def index():
     return render_template('index.html')
 
-@tryg.route('/add')
+@tryg.route('/add', methods=['GET'])
 @login_required
 def add():
     return render_template('add.html')
+
+@tryg.route('/add', methods=['POST'])
+@login_required
+def add_post():
+    jid = request.form.get('jid', get_uuid())
+    journal_date = request.form.get('journal-date')
+    journal_title = request.form.get('journal-title')
+    journal_content = request.form.get('journal-content')
+    journal_entry = Journal(jid=jid, title=journal_title, content=journal_content, journal_date=str_to_date(journal_date), author=current_user.username)
+    try:
+        tryg_db.session.add(journal_entry)
+        tryg_db.session.commit()
+        return redirect(url_for('listing'))
+    except Exception as e:
+        print(e)
+        flash("Could not save Journal Entry!")
+        context = {
+            "jid": jid,
+            "journal_date": journal_date,
+            "journal_title": journal_title,
+            "journal_content": journal_content
+        }
+        return render_template('add.html', context=context)
 
 @tryg.route('/listing')
 @login_required
@@ -107,4 +146,6 @@ def logout():
     return render_template("index.html")
 
 if __name__ == "__main__":
+    with  tryg.app_context():
+        tryg_db.metadata.create_all(tryg_db.engine)
     tryg.run(debug=True)
