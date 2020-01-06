@@ -129,6 +129,18 @@ def view(jid):
         }
         return render_template('view.html', context=context)
 
+@tryg.route('/delete/<jid>')
+@login_required
+def delete(jid):
+    try:
+        Journal.query.filter_by(jid=jid).delete()
+        tryg_db.session.commit()
+        flash("Deleted Journal # {}.".format(jid))
+        return redirect(url_for('listing'))
+    except Exception:
+        flash("Could not delete Journal # {}, please try again!".format(jid))
+        return redirect(url_for('listing'))
+
 @tryg.route('/login', methods=["GET"])
 def login():
     """For GET requests, display the login form. 

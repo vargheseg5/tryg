@@ -10,6 +10,13 @@
 <div class="column">
     <h3 class="title">Journal Entries</h3>
     <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
         <table class="table is-striped is-hoverable is-fullwidth">
             <thead>
                 <tr>
@@ -27,9 +34,9 @@
                     <th>{{ row.journal_title }}</th>
                     <th>{{ row.date_created }}</th>
                     <th>
-                        <a href="{{ url_for('view', jid=row.jid) }}" class="button is-normal is-outlined">View</a>
+                        <a href="{{ url_for('view', jid=row.jid) }}" class="button is-normal is-primary">View</a>
                         <a href="#" class="button is-normal is-outlined">Edit</a>
-                        <a href="#" class="button is-normal is-outlined">Delete</a>
+                        <a href="{{ url_for('delete', jid=row.jid) }}" class="button is-normal is-outlined is-danger">Delete</a>
                     </th>
                 </tr>
                 {% endfor %}
