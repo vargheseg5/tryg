@@ -1,0 +1,2 @@
+# tryg
+An encrypted journal
