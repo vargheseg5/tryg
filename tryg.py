@@ -105,7 +105,13 @@ def add_post():
 @tryg.route('/listing')
 @login_required
 def listing():
-    return render_template('listing.html')
+    context = {
+    }
+    entries = [{"jid": i.jid, "journal_date": i.journal_date, "journal_title": i.title, "date_created": i.date_created} for i in Journal.query.filter_by(author=current_user.username).all()]
+    print(entries)
+    if len(entries) != 0:
+        context["entries"] = entries
+    return render_template('listing.html', context=context)
 
 @tryg.route('/login', methods=["GET"])
 def login():
