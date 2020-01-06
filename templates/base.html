@@ -22,24 +22,24 @@
                 <a href="{{ url_for('index') }}" class="navbar-item">
                     Home
                 </a>
-                
+                {% if current_user.is_authenticated %}
                 <a href="{{ url_for('listing') }}" class="navbar-item">
                     View Journal Entries
                 </a>
                 <a href="{{ url_for('add') }}" class="navbar-item">
                     Add a Journal Entry
                 </a>
-                
-                
+                {% endif %}
+                {% if not current_user.is_authenticated %}
                 <a href="{{ url_for('login') }}" class="navbar-item">
                     Login
                 </a>
-                
-                
+                {% endif %}
+                {% if current_user.is_authenticated %}
                 <a href="{{ url_for('logout') }}" class="navbar-item">
                     Logout
                 </a>
-                
+                {% endif %}
             </div>
         </div>
     </nav>

@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#TRYD DB Files
+tryg_db.sqlite3
