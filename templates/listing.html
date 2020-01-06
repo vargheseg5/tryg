@@ -27,7 +27,7 @@
                     <th>{{ row.journal_title }}</th>
                     <th>{{ row.date_created }}</th>
                     <th>
-                        <a href="#" class="button is-normal is-outlined">View</a>
+                        <a href="{{ url_for('view', jid=row.jid) }}" class="button is-normal is-outlined">View</a>
                         <a href="#" class="button is-normal is-outlined">Edit</a>
                         <a href="#" class="button is-normal is-outlined">Delete</a>
                     </th>

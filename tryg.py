@@ -113,6 +113,22 @@ def listing():
         context["entries"] = entries
     return render_template('listing.html', context=context)
 
+@tryg.route('/view/<jid>')
+@login_required
+def view(jid):
+    journal_entry = Journal.query.filter_by(jid=jid).first()
+    if not journal_entry:
+        flash("Sorry, the requested Journal Entry does not exist. Please select one from below.")
+        return redirect(url_for('listing'))
+    else:
+        context = {
+            "jid": journal_entry.jid,
+            "journal_date": journal_entry.journal_date,
+            "journal_title": journal_entry.title,
+            "journal_content": journal_entry.content
+        }
+        return render_template('view.html', context=context)
+
 @tryg.route('/login', methods=["GET"])
 def login():
     """For GET requests, display the login form. 

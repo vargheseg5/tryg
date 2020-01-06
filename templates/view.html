@@ -1,0 +1,31 @@
+<!-- templates/view.html -->
+
+{% extends "base.html" %}
+
+{% block head %}
+    <title>TRYG | Add a journal entry</title>
+{% endblock %}
+
+{% block content %}
+<h1 class="title">
+    {{ context.journal_title }}
+</h1>
+<h2 class="subtitle">
+    {{ context.journal_date }}
+</h2>
+<div class="column is-8 is-offset-2">
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <div>
+            {{ context.journal_content }}
+        </div>
+    </div>
+</div>
+<a href="{{ url_for('listing') }}" class="button is-outlined">Go back</a>
+{% endblock %}
