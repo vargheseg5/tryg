@@ -6,7 +6,7 @@ from flask_login import (LoginManager, current_user, login_required,
                          login_user, logout_user)
 from flask_sqlalchemy import SQLAlchemy
 
-from utils import str_to_date, get_uuid
+from utils import date_to_str, get_uuid, str_to_date
 
 tryg = Flask(__name__)
 tryg.config["SECRET_KEY"] = b'U\x12"\xb7P\xc9\x9f\x9da3lZlb\xc7\x95\xe4W\xd2o\xf2\xbb\xdfg<\xd9\x0f\x87\x1en\xc0;'
@@ -88,7 +88,7 @@ def add_post():
     journal_content = request.form.get('journal-content')
     journal_entry = Journal(jid=jid, title=journal_title, content=journal_content, journal_date=str_to_date(journal_date), author=current_user.username)
     try:
-        tryg_db.session.add(journal_entry)
+        tryg_db.session.merge(journal_entry)
         tryg_db.session.commit()
         return redirect(url_for('listing'))
     except Exception as e:
@@ -140,6 +140,22 @@ def delete(jid):
     except Exception:
         flash("Could not delete Journal # {}, please try again!".format(jid))
         return redirect(url_for('listing'))
+
+@tryg.route('/edit/<jid>')
+@login_required
+def edit(jid):
+    journal_entry = Journal.query.filter_by(jid=jid).first()
+    if not journal_entry:
+        flash("Sorry, the requested Journal Entry does not exist. Please select one from below.")
+        return redirect(url_for('listing'))
+    else:
+        context = {
+            "jid": journal_entry.jid,
+            "journal_date": date_to_str(journal_entry.journal_date),
+            "journal_title": journal_entry.title,
+            "journal_content": journal_entry.content
+        }
+        return render_template('add.html', context=context)
 
 @tryg.route('/login', methods=["GET"])
 def login():

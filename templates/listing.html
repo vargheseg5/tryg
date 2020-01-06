@@ -35,7 +35,7 @@
                     <th>{{ row.date_created }}</th>
                     <th>
                         <a href="{{ url_for('view', jid=row.jid) }}" class="button is-normal is-primary">View</a>
-                        <a href="#" class="button is-normal is-outlined">Edit</a>
+                        <a href="{{ url_for('edit', jid=row.jid) }}" class="button is-normal is-outlined">Edit</a>
                         <a href="{{ url_for('delete', jid=row.jid) }}" class="button is-normal is-outlined is-danger">Delete</a>
                     </th>
                 </tr>
