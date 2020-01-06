@@ -40,7 +40,7 @@
             
             <div class="field">
                 <div class="control">
-                    <textarea class="input is-large" name="journal-content" id="journal-content" placeholder="Jot down your thoughts..." rows=10>{% if "journal_content" in context %}{{ context.journal_content }}{% endif %}</textarea>
+                    <textarea class="textarea is-medium" name="journal-content" id="journal-content" placeholder="Jot down your thoughts..." rows=20>{% if "journal_content" in context %}{{ context.journal_content }}{% endif %}</textarea>
                 </div>
             </div>
             <button class="button is-block is-info is-large">Add</button>
