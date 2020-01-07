@@ -6,7 +6,7 @@ from flask_login import (LoginManager, current_user, login_required,
                          login_user, logout_user)
 from flask_sqlalchemy import SQLAlchemy
 
-from utils import date_to_str, get_uuid, str_to_date
+from utils import date_to_str, datetime_to_str, get_uuid, str_to_date
 
 tryg = Flask(__name__)
 tryg.config["SECRET_KEY"] = b'U\x12"\xb7P\xc9\x9f\x9da3lZlb\xc7\x95\xe4W\xd2o\xf2\xbb\xdfg<\xd9\x0f\x87\x1en\xc0;'
@@ -107,7 +107,7 @@ def add_post():
 def listing():
     context = {
     }
-    entries = [{"jid": i.jid, "journal_date": i.journal_date, "journal_title": i.title, "date_created": i.date_created} for i in Journal.query.filter_by(author=current_user.username).order_by(Journal.journal_date.desc()).all()]
+    entries = [{"jid": i.jid, "journal_date": i.journal_date, "journal_title": i.title, "date_created": datetime_to_str(i.date_created)} for i in Journal.query.filter_by(author=current_user.username).order_by(Journal.journal_date.desc()).all()]
     print(entries)
     if len(entries) != 0:
         context["entries"] = entries
