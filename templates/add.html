@@ -3,6 +3,20 @@
 {% extends "base.html" %}
 
 {% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/sjcl.js') }}"></script>
+    <script type="text/javascript">
+        function encrypt_data(){
+            
+            var password = "xyz"
+            do {
+                password = prompt("Enter encryption key");
+                var password_confirm = prompt("Enter encryption key (again)");
+            } while (password != password_confirm);
+            $("#journal-content").val(sjcl.encrypt(password, $("#journal-content").val()));
+            return true;
+        }
+    </script>
     <title>TRYG | Add a journal entry</title>
 {% endblock %}
 
@@ -17,7 +31,7 @@
             </div>
         {% endif %}
         {% endwith %}
-        <form method="POST" action="/add">
+        <form method="POST" action="/add" name="journal_form" id="journal_form">
             {% if "jid" in context %}
             <div class=field>
                 <div class="control">
@@ -43,8 +57,18 @@
                     <textarea class="textarea is-medium" name="journal-content" id="journal-content" placeholder="Jot down your thoughts..." rows=20>{% if "journal_content" in context %}{{ context.journal_content }}{% endif %}</textarea>
                 </div>
             </div>
-            <button class="button is-block is-info is-large">Add</button>
+            <button class="button is-block is-info is-large" id="add_button" onclick="javascript:encrypt_data()">Add</button>
         </form>
     </div>
 </div>
+
+{% if "journal_content" in context %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        var password = prompt("Enter encryption key");
+        $("#journal-content").val(sjcl.decrypt(password, $("#journal-content").val()));
+        return true;
+    });
+</script>
+{% endif %}
 {% endblock %}

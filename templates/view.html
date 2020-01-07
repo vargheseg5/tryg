@@ -3,6 +3,8 @@
 {% extends "base.html" %}
 
 {% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/sjcl.js') }}"></script>
     <title>TRYG | Add a journal entry</title>
 {% endblock %}
 
@@ -22,10 +24,17 @@
             </div>
         {% endif %}
         {% endwith %}
-        <div>
+        <textarea class="textarea is-medium" id="journal-content" readonly rows=20>
             {{ context.journal_content }}
-        </div>
+        </textarea>
     </div>
 </div>
 <a href="{{ url_for('listing') }}" class="button is-outlined">Go back</a>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var password = prompt("Enter encryption key");
+        $("#journal-content").val(sjcl.decrypt(password, $("#journal-content").val()));
+        return true;
+    });
+</script>
 {% endblock %}
