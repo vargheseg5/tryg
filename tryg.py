@@ -107,7 +107,7 @@ def add_post():
 def listing():
     context = {
     }
-    entries = [{"jid": i.jid, "journal_date": i.journal_date, "journal_title": i.title, "date_created": i.date_created} for i in Journal.query.filter_by(author=current_user.username).all()]
+    entries = [{"jid": i.jid, "journal_date": i.journal_date, "journal_title": i.title, "date_created": i.date_created} for i in Journal.query.filter_by(author=current_user.username).order_by(Journal.journal_date.desc()).all()]
     print(entries)
     if len(entries) != 0:
         context["entries"] = entries
