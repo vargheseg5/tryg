@@ -4,7 +4,9 @@
 
 {% block head %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/sjcl.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js" integrity="sha256-nIoG9XIePM1QNttI6KAGLYGNxc4DNinxxmOZW0/Z7uA=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css" integrity="sha256-Is0XNfNX8KF/70J2nv8Qe6BWyiXrtFxKfJBHoDgNAEM=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js" integrity="sha256-6sZs7OGP0Uzcl7UDsLaNsy1K0KTZx1+6yEVrRJMn2IM=" crossorigin="anonymous"></script>
     <title>TRYG | Add a journal entry</title>
 {% endblock %}
 
@@ -31,9 +33,11 @@
 </div>
 <a href="{{ url_for('listing') }}" class="button is-outlined">Go back</a>
 <script type="text/javascript">
+    var simplemde = new SimpleMDE({element: $("#journal-content")[0], toolbar: false});
+    simplemde.codemirror.options.readOnly = true;
     $(document).ready(function() {
-        var password = prompt("Enter encryption key");
-        $("#journal-content").val(sjcl.decrypt(password, $("#journal-content").val()));
+        var password = prompt("Enter decryption key");
+        simplemde.value(sjcl.decrypt(password, simplemde.value()));
         return true;
     });
 </script>
