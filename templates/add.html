@@ -72,6 +72,9 @@
 {% if "journal_content" in context %}
         var password = prompt("Enter encryption key");
         simplemde.value(sjcl.decrypt(password, simplemde.value()));
+{% else %}
+        var date = new Date();
+        $("#journal-date").val(date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString().padStart(2, 0) + '-' + date.getDate().toString().padStart(2, 0))
 {% endif %}
         return true;
     });
