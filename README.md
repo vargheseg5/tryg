@@ -1,2 +1,2 @@
 # tryg
-An encrypted journal
+Zero trust, in-browser, client side encrypted note taking.
